@@ -1,0 +1,33 @@
+{
+  "name": "extra-awsconfig",
+  "version": "0.0.1",
+  "description": "Get ready to use AWS Config from parameters and environment variables.",
+  "main": "index.js",
+  "scripts": {
+    "test": "exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodef/extra-awsconfig.git"
+  },
+  "keywords": [
+    "extra",
+    "aws",
+    "config",
+    "amazon",
+    "parameter",
+    "environment",
+    "variable",
+    "cli",
+    "command",
+    "console",
+    "shell",
+    "merferry"
+  ],
+  "author": "wolfram77@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nodef/extra-awsconfig/issues"
+  },
+  "homepage": "https://github.com/nodef/extra-awsconfig#readme"
+}
