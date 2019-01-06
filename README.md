@@ -154,7 +154,7 @@ Do you need anything similar?
 > - [extra-amazontranslate] can translate long text to target language.
 > - [extra-amazontts] can generate speech from text.
 
-Suggestions are welcome. Please create an issue. 
+Suggestions are welcome. Please [create an issue]. 
 <br><br>
 
 
@@ -163,5 +163,6 @@ Suggestions are welcome. Please create an issue.
 
 [AWS Config]: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor_details
 [extra-amazontranslate]: https://www.npmjs.com/package/extra-amazontranslate
-[extra-amazonttts]: https://www.npmjs.com/package/extra-amazonttts
+[extra-amazontts]: https://www.npmjs.com/package/extra-amazontts
+[create an issue]: https://github.com/nodef/extra-awsconfig/issues
 [AWS CLI environment variables]: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
