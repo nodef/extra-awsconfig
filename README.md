@@ -1,4 +1,4 @@
-Get ready to use AWS Config from arguments and environment variables.
+Get ready to use [AWS Config] from arguments and environment variables.
 > Do you want to:
 > - Have most of you AWS Config loaded from environment variables?
 > - Handle JSON shared credentials and config files?
@@ -8,9 +8,8 @@ Get ready to use AWS Config from arguments and environment variables.
 
 ## setup
 
-1. Install [Node.js], if not installed.
-2. Run `npm install -g extra-awsconfig` in console.
-3. To install this as a package use `npm install extra-awsconfig`.
+1. Run `npm install -g extra-awsconfig` in console.
+2. To install this as a package use `npm install extra-awsconfig`.
 <br>
 
 
@@ -95,11 +94,11 @@ region = us-east-1
   ...
 }
 ```
-> See [AWS Config options].
+> See [AWS Config] options.
 <br>
 
 
-## javascript
+## package
 
 ```javascript
 const awsconfig = require('extra-awsconfig');
@@ -146,8 +145,23 @@ awsconfig(options);
 // options: custom AWS config options
 // -> AWS config options
 ```
+<br>
 
 
+## similar
+
+Do you need anything similar?
+> - [extra-amazontranslate] can translate long text to target language.
+> - [extra-amazontts] can generate speech from text.
+
+Suggestions are welcome. Please create an issue. 
+<br><br>
 
 
-[AWS Config options]: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor_details
+[![nodef](https://i.imgur.com/eO4zcjv.jpg)](https://nodef.github.io)
+> References: [AWS Config], [AWS CLI environment variables].
+
+[AWS Config]: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor_details
+[extra-amazontranslate]: https://www.npmjs.com/package/extra-amazontranslate
+[extra-amazonttts]: https://www.npmjs.com/package/extra-amazonttts
+[AWS CLI environment variables]: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
