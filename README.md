@@ -21,19 +21,25 @@ awsconfig
 # get default AWS config
 
 awsconfig --access_key_id "..." --secret_access_key "..."
-# get AWS config with custom credentials
-
 awsconfig --accessKeyId "..." --secretAccessKey "..."
+awsconfig --id "..." --key "..."
 # get AWS config with custom credentials
+## all commands are equivalent
 
-awsconfig --accessKeyId "..." --secretAccessKey "..."
-# get AWS config with custom credentials
+awsconfig --region "us-west-1"
+# get AWS config with region="us-west-1"
 
 awsconfig --sslEnabled=0
 # get AWS config with SSL disabled
+## enable SSL with simply --sslEnabled
 
-awsconfig -se
-# get AWS config with SSL enabled
+awsconfig --profile dev
+# get AWS config with "dev" profile
+## credential and config associated with the profile is loaded
+
+awsconfig --credentialsFile credentials.json
+# use a custom credentials file
+## credentials/config file can be INI for JSON
 ```
 
 ### reference
@@ -44,64 +50,56 @@ awsconfig [options]
 
 # Options:
 # --help: show this help
-# -aki, --accesskeyid: your AWS access key ID
-# -sak, --secretaccesskey: your AWS secret access key
-# -r, --region: the region to send service requests to (us-east-1)
-# -mr, --maxretries: the maximum amount of retries to attempt with a request
-# -mf, --maxretries: the maximum amount of redirects to follow with a request
-# -se, --sslenabled: whether to enable SSL for requests
-# -pv, --paramvalidation: whether input parameters should be validated against the operation description before sending the request (true)
-# -pvn, --paramvalidationmin: validates that a value meets the min constraint
-# -pvx, --paramvalidationmax: validates that a value meets the max constraint
-# -pvp, --: 
-# -pve, --: 
-# -cc, --: 
-# -crt, --: 
-# -ccs, --: 
-# -s3fps, --: 
-# -s3be, --: 
-# -s3dbs, --: 
-# -hop, --: 
-# -hoct, --: 
-# -hot, --: 
-# -hoxa, --: 
-# -hoxwc, --httpoptionsxhrwithcredentials: 
-# -av, --apiversion: 
-# -sco, --systemclockoffset: 
-# -sv, --signatureversion: 
-# -sc, --signaturecache: 
-# -ddc, --dynamodbcrc32: 
-# -csm, --clientsidemonitoring: 
-# -ede, --endpointdiscoveryenabled: 
-# -ecs, --endpointcachesize: 
-# -hpe, --hostprefixenabled: 
+# -i, --id: set your AWS access key ID
+# -k, --key: set your AWS secret access key
+# -e, --endpoint: set the endpoint to send service requests to
+# -r, --region: set the region to send service requests to (us-east-1)
+# -p, --profile: set the AWS config profile to use (default)
+# -kf, --credentialsFile: set custom AWS credentails file path
+# -cf, --configFile: set custom AWS config file path
+# ...: for more options check AWS Config options below
 
-  else if(k==='-' || k==='--') (o.paramValidation=paramValidation(o.paramValidation)).min = bool();
-  else if(k==='-' || k==='--') (o.paramValidation=paramValidation(o.paramValidation)).max = bool();
-  else if(k==='-' || k==='--paramvalidationpattern') (o.paramValidation=paramValidation(o.paramValidation)).pattern = bool();
-  else if(k==='-' || k==='--paramvalidationenum') (o.paramValidation=paramValidation(o.paramValidation)).enum = bool();
-  else if(k==='-' || k==='--computechecksums') o.computeChecksums = bool();
-  else if(k==='-' || k==='--convertresponsetypes') o.convertResponseTypes = bool();
-  else if(k==='-' || k==='--correctclockskew') o.correctClockSkew = bool();
-  else if(k==='-' || k==='--s3forcepathstyle') o.s3ForcePathStyle = bool();
-  else if(k==='-' || k==='--s3bucketendpoint') o.s3BucketEndpoint = true;
-  else if(k==='-' || k==='--s3disablebodysigning') o.s3DisableBodySigning = true;
-  else if(k==='-' || k==='--httpoptionsproxy') (o.httpOptions=o.httpOptions||{}).proxy = bool();
-  else if(k==='-' || k==='--httpoptionsconnecttimeout') (o.httpOptions=o.httpOptions||{}).connectTimeout = bool();
-  else if(k==='-' || k==='--httpoptionstimeout') (o.httpOptions=o.httpOptions||{}).timeout = bool();
-  else if(k==='-' || k==='--httpoptionsxhrasync') (o.httpOptions=o.httpOptions||{}).xhrAsync = bool();
-  else if(k==='-' || k==='--') (o.httpOptions=o.httpOptions||{}).xhrWithCredentials = bool();
-  else if(k==='-' || k==='--') o.apiVersion = str();
-  else if(k==='-' || k==='--') o.systemClockOffset = parseFloat(str());
-  else if(k==='-' || k==='--') o.signatureVersion = str();
-  else if(k==='-' || k==='--') o.signatureCache = bool();
-  else if(k==='-' || k==='--') o.dynamoDbCrc32 = bool();
-  else if(k==='-' || k==='--') o.clientSideMonitoring = bool();
-  else if(k==='-' || k==='--') o.endpointDiscoveryEnabled = bool();
-  else if(k==='-' || k==='--') o.endpointCacheSize = parseInt(str(), 10);
-  else if(k==='-' || k==='--') o.hostPrefixEnabled = bool();
+# Environment variables:
+$AWS_ACCESS_KEY_ID           # set your default AWS access key ID
+$AWS_SECRET_ACCESS_KEY       # set your default AWS secret access key
+$AWS_DEFAULT_REGION          # set default region to send service requests to (us-east-1)
+$AWS_PROFILE                 # set default AWS config profile to use (default)
+$AWS_SHARED_CREDENTIALS_FILE # set default AWS credentails file path (~/.aws/credentials)
+$AWS_CONFIG_FILE             # set default AWS config file path (~/.aws/config)
+
+# Credential/Config file (INI):
+[default]
+aws_access_key_id = ...
+aws_secret_access_key = ...
+region = us-east-1
+...
+
+# Credential/Config file (JSON, default profile):
+{
+  "accessKeyId": "...",
+  "secretAccessKey": "...",
+  "region": "us-east-1",
+  ...
+}
+
+# Credential/Config file (JSON, multi-profile):
+{
+  "profiles": true,
+  "default": {
+    "accessKeyId": "...",
+    "secretAccessKey": "...",
+    "region": "us-east-1",
+    ...
+  },
+  "dev": { ... },
+  ...
+}
 ```
+> See [AWS Config options].
+<br>
 
+
+## javascript
 
 ```javascript
 const awsconfig = require('extra-awsconfig');
@@ -109,8 +107,21 @@ const awsconfig = require('extra-awsconfig');
 awsconfig();
 // get default AWS config
 
+awsconfig({accessKeyId: '...', secretAccessKey: '...'});
+// get AWS config with custom credentials
+
 awsconfig({region: 'us-west-1'});
 // get AWS config with region="us-west-1"
+
+awsconfig({sslEnabled: false});
+// get AWS config with SSL disabled
+
+awsconfig({profile: 'dev'});
+// get AWS config with "dev" profile
+
+awsconfig({credentialsFile: 'credentials.json'});
+// use a custom credentials file
+/// credentials/config file can be INI for JSON
 
 var A = process.argv, o = {};
 for(var i=0, I=A.length; i<I;)
@@ -121,18 +132,22 @@ awsconfig(o);
 
 ### reference
 
-```bash
-# Environment variables:
-$AWS_ACCESS_KEY_ID           # your AWS access key ID
-$AWS_SECRET_ACCESS_KEY       # your AWS secret access key
-$AWS_DEFAULT_REGION          # region to send service requests to
-$AWS_PROFILE                 # profile with the credentials and options to use
-$AWS_SHARED_CREDENTIALS_FILE # one or more access keys files (~/.aws/credentials)
-$AWS_CONFIG_FILE             # one or more configuration files (~/.aws/config)
+```javascript
+const awsconfig = require('extra-awsconfig');
 
-# Arguments:
-## for awsconfig.options():
-## 
+awsconfig.options(options, argument_key, arguments, index);
+// options: target object to store AWS config options
+// argument_key: name of the argument (ex: "--help")
+// arguments: arguments array (ex: process.argv)
+// index: current index in arguments array (ex: i=2...args.length)
+// -> new index in arguments array
+
+awsconfig(options);
+// options: custom AWS config options
+// -> AWS config options
 ```
 
 
+
+
+[AWS Config options]: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor_details
