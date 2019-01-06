@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const AWS = require('aws-sdk');
 const _ = require('lodash');
 const ini = require('ini');
@@ -12,40 +13,48 @@ const DEFAULTS = {
   secretAccessKey: E['AWS_SECRET_ACCESS_KEY'],
   region: E['AWS_DEFAULT_REGION']||'us-east-1',
   profile: E['AWS_PROFILE']||'default',
-  sharedCredentialsFile: E['AWS_SHARED_CREDENTIALS_FILE']||'~/.aws/credentials',
+  credentialsFile: E['AWS_SHARED_CREDENTIALS_FILE']||'~/.aws/credentials',
   configFile: E['AWS_CONFIG_FILE']||'~/.aws/config'
 };
 
 
 // Load config from path.
-function configLoad(pth, pro) {
-  var z = {}, pth = pth.replace(/^\s*~/, os.homedir());
-  if(!fs.existsSync(pth)) return z;
+function configLoad(pth) {
+  pth = pth.replace(/^\s*~/, os.homedir());
+  if(!fs.existsSync(pth)) return {};
   var dat = fs.readFileSync(pth, 'utf8');
   if(pth.endsWith('.json')) return JSON.parse(dat);
-  var cfg = ini.parse(dat);
-  cfg = cfg[pro]||cfg;
-  for(var k in cfg)
-    z[_.camelCase(k.replace(/^aws_/, ''))] = cfg[k];
-  return z;
+  var cfg = ini.parse(dat), ans = {profiles: true};
+  for(var p in cfg) {
+    var ap = ans[p]={};
+    for(var k in cfg[p])
+      ap[_.camelCase(k.replace(/^aws_/, ''))] = cfg[p][k];
+  }
+  return ans;
+};
+
+// Load configs from multiple paths.
+function configsLoad(pth) {
+  return pth.split(';').map(p => configLoad(p));
+};
+
+// Get config for profile.
+function configProfile(cfg, pro) {
+  return cfg.profiles? cfg[pro||'default']:cfg;
 };
 
 
 // Global variables.
-const SHARED_CREDENTIALS = DEFAULTS.sharedCredentialsFile.split(';').map(pth => configLoad(pth, DEFAULTS.profile));
-const CONFIGS = DEFAULTS.configFile.split(';').map(pth => configLoad(pth, DEFAULTS.profile));
+const CREDENTIALS = configsLoad(DEFAULTS.credentialsFile);
+const CONFIGS = configsLoad(DEFAULTS.configFile);
 
-
-// Get param validation object.
-function paramValidation(v) {
-  return typeof v==='boolean'? {min: v, max: v, pattern: v, enum: v}:v||{};
-};
 
 // Get default options.
 function defaults(o) {
   o.accessKeyId = o.accessKeyId||DEFAULTS.accessKeyId;
   o.secretAccessKey = o.secretAccessKey||DEFAULTS.secretAccessKey;
   o.region = o.region||DEFAULTS.region;
+  o.profile = o.profile||DEFAULTS.profile;
   return o;
 };
 
@@ -61,43 +70,16 @@ function defaults(o) {
 function options(o, k, a, i) {
   var e = k.indexOf('='), v = null, bool = () => true, str = () => a[++i];
   if(e>=0) { v = k.substring(e+1); bool = () => boolean(v); str = () => v; k = k.substring(o, e); }
-  k = (k.startsWith('--')? '--'+k.replace(/[A-Za-z0-9]/g, ''):k).toLowerCase();
+  var kc = _.camelCase(k); k = (k.startsWith('--')? '--'+kc:k);
   if(k==='--help') o.help = bool();
-  else if(k==='-aki' || k==='--accesskeyid') o.accessKeyId = str();
-  else if(k==='-sak' || k==='--secretaccesskey') o.secretAccessKey = str();
+  else if(k==='-i' || k==='--id') o.accessKeyId = str();
+  else if(k==='-k' || k==='--key') o.secretAccessKey = str();
+  else if(k==='-e' || k==='--endpoint') o.endpoint = str();
   else if(k==='-r' || k==='--region') o.region = str();
-  else if(k==='-mr' || k==='--maxretries') o.maxRetries = parseInt(str(), 10);
-  else if(k==='-mf' || k==='--maxredirects') o.maxRedirects = parseInt(str(), 10);
-  else if(k==='-se' || k==='--sslenabled') o.sslEnabled = bool();
-  else if(k==='-pv' || k==='--paramvalidation') o.paramValidation = bool();
-  else if(k==='-pvn' || k==='--paramvalidationmin') (o.paramValidation=paramValidation(o.paramValidation)).min = bool();
-  else if(k==='-pvx' || k==='--paramvalidationmax') (o.paramValidation=paramValidation(o.paramValidation)).max = bool();
-  else if(k==='-pvp' || k==='--paramvalidationpattern') (o.paramValidation=paramValidation(o.paramValidation)).pattern = bool();
-  else if(k==='-pve' || k==='--paramvalidationenum') (o.paramValidation=paramValidation(o.paramValidation)).enum = bool();
-  else if(k==='-cc' || k==='--computechecksums') o.computeChecksums = bool();
-  else if(k==='-crt' || k==='--convertresponsetypes') o.convertResponseTypes = bool();
-  else if(k==='-ccs' || k==='--correctclockskew') o.correctClockSkew = bool();
-  else if(k==='-s3fps' || k==='--s3forcepathstyle') o.s3ForcePathStyle = bool();
-  else if(k==='-s3be' || k==='--s3bucketendpoint') o.s3BucketEndpoint = true;
-  else if(k==='-s3dbs' || k==='--s3disablebodysigning') o.s3DisableBodySigning = true;
-  else if(k==='-hop' || k==='--httpoptionsproxy') (o.httpOptions=o.httpOptions||{}).proxy = bool();
-  else if(k==='-hoct' || k==='--httpoptionsconnecttimeout') (o.httpOptions=o.httpOptions||{}).connectTimeout = bool();
-  else if(k==='-hot' || k==='--httpoptionstimeout') (o.httpOptions=o.httpOptions||{}).timeout = bool();
-  else if(k==='-hoxa' || k==='--httpoptionsxhrasync') (o.httpOptions=o.httpOptions||{}).xhrAsync = bool();
-  else if(k==='-hoxwc' || k==='--httpoptionsxhrwithcredentials') (o.httpOptions=o.httpOptions||{}).xhrWithCredentials = bool();
-  else if(k==='-av' || k==='--apiversion') o.apiVersion = str();
-  else if(k==='-sco' || k==='--systemclockoffset') o.systemClockOffset = parseFloat(str());
-  else if(k==='-sv' || k==='--signatureversion') o.signatureVersion = str();
-  else if(k==='-sc' || k==='--signaturecache') o.signatureCache = bool();
-  else if(k==='-ddc' || k==='--dynamodbcrc32') o.dynamoDbCrc32 = bool();
-  else if(k==='-csm' || k==='--clientsidemonitoring') o.clientSideMonitoring = bool();
-  else if(k==='-ede' || k==='--endpointdiscoveryenabled') o.endpointDiscoveryEnabled = bool();
-  else if(k==='-ecs' || k==='--endpointcachesize') o.endpointCacheSize = parseInt(str(), 10);
-  else if(k==='-hpe' || k==='--hostprefixenabled') o.hostPrefixEnabled = bool();
   else if(k==='-p' || k==='--profile') o.profile = str();
-  else if(k==='-scf' || k==='--sharedcredentialsfile') o.sharedCredentialsFile = str();
-  else if(k==='-cf' || k==='--configfile') o.configFile = str();
-  else return i;
+  else if(k==='-kf' || k==='--credentialsFile') o.credentialsFile = str();
+  else if(k==='-cf' || k==='--configFile') o.configFile = str();
+  else if(kc in AWS.config) o[kc] = typeof AWS.config[kc]==='boolean'? bool():str();
   return i+1;
 };
 
@@ -106,12 +88,23 @@ function options(o, k, a, i) {
  * @param {object} o Custom options.
  */
 function awsconfig(o) {
-  o = defaults(Object.assign(o||{}, AWS.config));
+  var p = defaults(Object.assign({}, AWS.config));
   var i = Math.floor(65535*Math.random());
-  Object.assign(o, SHARED_CREDENTIALS[i % SHARED_CREDENTIALS.length]);
-  Object.assign(o, CONFIGS[i % CONFIGS.length]);
-  console.log(o);
+  var cre = o.credentialsFile? configsLoad(o.credentialsFile):CREDENTIALS;
+  var cfg = o.configFile? configsLoad(o.configFile):CONFIGS;
+  Object.assign(p, configProfile(cre[i % cre.length], o.profile));
+  Object.assign(p, configProfile(cfg[i % cfg.length], o.profile));
+  return Object.assign(p, o);
 };
 
 awsconfig.options = options;
 module.exports = awsconfig;
+
+
+// Run on shell.
+function shell(a) {
+  for(var i=2, I=a.length, o={}; i<I;)
+    i = options(o, a[i], a, i);
+  console.log(awsconfig(o));
+};
+if(require.main===module) shell(process.argv);
