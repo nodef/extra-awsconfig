@@ -1,8 +1,12 @@
 {
   "name": "extra-awsconfig",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Get ready to use AWS Config from parameters and environment variables.",
   "main": "index.js",
+  "preferGlobal": true,
+  "bin": {
+    "amazontts": "index.js"
+  },
   "scripts": {
     "test": "exit"
   },
