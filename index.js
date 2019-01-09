@@ -13,8 +13,8 @@ const DEFAULTS = {
   secretAccessKey: E['AWS_SECRET_ACCESS_KEY'],
   region: E['AWS_DEFAULT_REGION']||'us-east-1',
   profile: E['AWS_PROFILE']||'default',
-  credentialsFile: E['AWS_SHARED_CREDENTIALS_FILE']||'~/.aws/credentials',
-  configFile: E['AWS_CONFIG_FILE']||'~/.aws/config'
+  file: E['AWS_CONFIG_FILE']||'~/.aws/config',
+  credentialsFile: E['AWS_SHARED_CREDENTIALS_FILE']||'~/.aws/credentials'
 };
 
 
@@ -45,8 +45,8 @@ function configProfile(cfg, pro) {
 
 
 // Global variables.
+const CONFIGS = configsLoad(DEFAULTS.file);
 const CREDENTIALS = configsLoad(DEFAULTS.credentialsFile);
-const CONFIGS = configsLoad(DEFAULTS.configFile);
 
 
 // Get default options.
@@ -77,8 +77,8 @@ function options(o, k, a, i) {
   else if(k==='-e' || k==='--endpoint') o.endpoint = str();
   else if(k==='-r' || k==='--region') o.region = str();
   else if(k==='-p' || k==='--profile') o.profile = str();
-  else if(k==='-kf' || k==='--credentialsFile') o.credentialsFile = str();
-  else if(k==='-cf' || k==='--configFile') o.configFile = str();
+  else if(k==='-f' || k==='--file') o.file = str();
+  else if(k==='-cf' || k==='--credentialsFile') o.credentialsFile = str();
   else if(kc in AWS.config) o[kc] = typeof AWS.config[kc]==='boolean'? bool():str();
   else o.argv = a[i];
   return i+1;
@@ -92,7 +92,7 @@ function awsconfig(o) {
   var p = defaults(Object.assign({}, AWS.config));
   var i = Math.floor(65535*Math.random());
   var cre = o.credentialsFile? configsLoad(o.credentialsFile):CREDENTIALS;
-  var cfg = o.configFile? configsLoad(o.configFile):CONFIGS;
+  var cfg = o.file? configsLoad(o.file):CONFIGS;
   Object.assign(p, configProfile(cre[i % cre.length], o.profile));
   Object.assign(p, configProfile(cfg[i % cfg.length], o.profile));
   return Object.assign(p, o);
