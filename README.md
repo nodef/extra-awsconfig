@@ -49,13 +49,13 @@ awsconfig [options]
 
 # Options:
 # --help: show this help
-# -i, --id: set your AWS access key ID
-# -k, --key: set your AWS secret access key
+# -i, --id:       set your AWS access key ID
+# -k, --key:      set your AWS secret access key
 # -e, --endpoint: set the endpoint to send service requests to
-# -r, --region: set the region to send service requests to (us-east-1)
-# -p, --profile: set the AWS config profile to use (default)
-# -kf, --credentialsFile: set custom AWS credentails file path
-# -cf, --configFile: set custom AWS config file path
+# -r, --region:   set the region to send service requests to (us-east-1)
+# -p, --profile:  set the AWS config profile to use (default)
+# -f, --file:             set custom AWS config file path
+# -cf, --credentialsFile: set custom AWS credentails file path
 # ...: for more options check AWS Config options below
 
 # Environment variables:
@@ -141,10 +141,19 @@ awsconfig.options(options, argument_key, arguments, index);
 // index: current index in arguments array (ex: i=2...args.length)
 // -> new index in arguments array
 
+
 awsconfig(options);
 // options: custom AWS config options
 // -> AWS config options
+
+// Default options:
+options = {
+  file: '~/.aws/config',                 // set custom AWS config file path
+  credentialsFile: '~/.aws/credentials', // set custom AWS credentails file path
+  ... /* for more options check AWS Config options below */
+};
 ```
+> See [AWS Config] options.
 <br>
 
 
