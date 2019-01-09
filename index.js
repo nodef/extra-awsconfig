@@ -80,6 +80,7 @@ function options(o, k, a, i) {
   else if(k==='-kf' || k==='--credentialsFile') o.credentialsFile = str();
   else if(k==='-cf' || k==='--configFile') o.configFile = str();
   else if(kc in AWS.config) o[kc] = typeof AWS.config[kc]==='boolean'? bool():str();
+  else o.argv = a[i];
   return i+1;
 };
 
