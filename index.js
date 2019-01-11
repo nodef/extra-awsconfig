@@ -90,7 +90,7 @@ function options(o, k, a, i) {
  */
 function awsconfig(o) {
   var p = defaults(Object.assign({}, AWS.config));
-  var i = Math.floor(65535*Math.random());
+  var i = Math.floor(65535*Math.random()); o = o||{};
   var cre = o.credentialsFile? configsLoad(o.credentialsFile):CREDENTIALS;
   var cfg = o.file? configsLoad(o.file):CONFIGS;
   Object.assign(p, configProfile(cre[i % cre.length], o.profile));
