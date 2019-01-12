@@ -1,6 +1,6 @@
 {
   "name": "extra-awsconfig",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Get ready to use AWS Config from parameters and environment variables.",
   "main": "index.js",
   "preferGlobal": true,
@@ -15,6 +15,8 @@
     "aws",
     "config",
     "amazon",
+    "web",
+    "service",
     "parameter",
     "environment",
     "variable",
