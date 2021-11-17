@@ -3,17 +3,21 @@ Get ready to use [AWS Config] from arguments and environment variables.
 > - Have most of you AWS Config loaded from environment variables?
 > - Handle JSON shared credentials and config files?
 > - Get AWS Config from arguments?
+
+<br>
 <br>
 
 
-## setup
+## Setup
 
 1. Run `npm install -g extra-awsconfig` in console.
 2. To install this as a package use `npm install extra-awsconfig`.
+
+<br>
 <br>
 
 
-## console
+## Console
 
 ```bash
 awsconfig
@@ -41,7 +45,8 @@ awsconfig --credentialsFile credentials.json
 ## credentials/config file can be INI for JSON
 ```
 
-### reference
+
+### Reference
 
 ```bash
 awsconfig [options]
@@ -95,10 +100,12 @@ region = us-east-1
 }
 ```
 > See [AWS Config] options.
+
+<br>
 <br>
 
 
-## package
+## Package
 
 ```javascript
 const awsconfig = require('extra-awsconfig');
@@ -129,7 +136,8 @@ awsconfig(o);
 // get AWS config from arguments
 ```
 
-### reference
+
+### Reference
 
 ```javascript
 const awsconfig = require('extra-awsconfig');
@@ -154,17 +162,21 @@ options = {
 };
 ```
 > See [AWS Config] options.
+
+<br>
 <br>
 
 
-## similar
+## Similar
 
 Do you need anything similar?
 > - [extra-amazontranslate] can translate long text to target language.
 > - [extra-amazontts] can generate speech from text.
 
-Suggestions are welcome. Please [create an issue]. 
-<br><br>
+Suggestions are welcome. Please [create an issue].
+
+<br>
+<br>
 
 
 [![nodef](https://i.imgur.com/eO4zcjv.jpg)](https://nodef.github.io)
