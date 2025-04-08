@@ -182,6 +182,8 @@ Suggestions are welcome. Please [create an issue].
 [![nodef](https://i.imgur.com/eO4zcjv.jpg)](https://nodef.github.io)
 > References: [AWS Config], [AWS CLI environment variables].
 
+![](https://ga-beacon.deno.dev/G-RC63DPBH3P:SH3Eq-NoQ9mwgYeHWxu7cw/github.com/nodef/extra-awsconfig)
+
 [AWS Config]: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor_details
 [extra-amazontranslate]: https://www.npmjs.com/package/extra-amazontranslate
 [extra-amazontts]: https://www.npmjs.com/package/extra-amazontts
